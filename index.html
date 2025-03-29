@@ -49,7 +49,8 @@
           placeholder="Enter a destination or keyword"
           aria-label="Search Destination"
         />
-        <button type="submit">Search</button>
+        <button id="search_btn" type="submit">Search</button>
+        <button id="clear_btn" type="button">Clear</button>
       </div>
     </header>
 
@@ -73,89 +74,22 @@
   <script src="travel_recommendation.js" />
   <script>
     const searchInput = document.querySelector('.search-bar input');
-    const searchButton = document.querySelector('.search-bar button');
+    const searchButton = document.getElementById('search_btn');
+    const clearButton = document.getElementById('clear_btn');
     const resultsContainer = document.getElementById('results');
-    const destinations = fetchTravelData().then(data => {
-      console.log(data);
-      return data;
-    });
-
-    const renderBeaches = () => {
-      const beachDestinations = destinations.beaches;
-
-      beachDestinations.forEach(dest => {
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        card.innerHTML = `
-          <img src="${dest.image}" alt="${dest.name}" />
-          <h3>${dest.name}</h3>
-          <p>${dest.description}</p>
-          <a href="#" class="visit-btn">Visit</a>
-        `;
-        resultsContainer.appendChild(card);
-      });
-    }
-
-    const renderNoResults = () => {
-      const noResultsMessage = document.createElement('p');
-      noResultsMessage.textContent = 'No results found.';
-      noResultsMessage.style.color = '#333';
-      resultsContainer.appendChild(noResultsMessage);
-    }
-    const renderTemples = () => {
-      const templeDestinations = destinations.temples;
-
-      templeDestinations.forEach(dest => {
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        card.innerHTML = `
-          <img src="${dest.image}" alt="${dest.name}" />
-          <h3>${dest.name}</h3>
-          <p>${dest.description}</p>
-          <a href="#" class="visit-btn">Visit</a>
-        `;
-        resultsContainer.appendChild(card);
-      });
-    }
-    const renderCountries = () => {
-      const countryDestinations = destinations.countries;
-
-      countryDestinations.forEach(dest => {
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        card.innerHTML = `
-          <img src="${dest.image}" alt="${dest.name}" />
-          <h3>${dest.name}</h3>
-          <p>${dest.description}</p>
-          <a href="#" class="visit-btn">Visit</a>
-        `;
-        resultsContainer.appendChild(card);
-      });
-    }
 
     // When the user clicks the button...
     searchButton.addEventListener('click', () => {
-      // 1. Get the search text
+      console.log('Search button clicked');
       const query = searchInput.value.trim().toLowerCase();
+      queryProcessor(resultsContainer, query);
+    });
 
-      // 2. Check if query includes certain keywords
-      if (query.includes('beach')) {
-        // We can match 'beach', 'beaches', 'BEACH', etc.
-        console.log('Searching for beaches...');
-        renderBeaches();
-      } else if (query.includes('temple')) {
-        // Matches 'temple', 'temples', 'TEMPLE'...
-        console.log('Searching for temples...');
-        renderTemples();
-      } else if (query.includes('country') || query.includes('countries')) {
-        // Matches 'country', 'countries', 'COUNTRY', etc.
-        console.log('Searching for countries...');
-        renderCountries();
-      } else {
-        // No recognized keyword
-        console.log('No results found.');
-        renderNoResults();
-      }
+    // When the user clicks the clear button...
+    clearButton.addEventListener('click', () => {
+      console.log('Clear button clicked');
+      searchInput.value = '';
+      resultsContainer.innerHTML = ''; // Clear the results
     });
   </script>
 </html>
