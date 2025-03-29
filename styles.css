@@ -10,7 +10,7 @@ body {
   color: #333;
   background-color: #fff;
   margin: 0;
-  background: url("hero-bg.png") top center/cover no-repeat;
+  background: url("images/hero-bg.png") top center/cover no-repeat;
 }
 
 /* Social Links */
