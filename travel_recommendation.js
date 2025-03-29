@@ -12,9 +12,11 @@ async function fetchTravelData() {
   }
 }
 
-const destinations = fetchTravelData().then(data => {
+let destinations = null;
+
+fetchTravelData().then(data => {
   console.log(data);
-  return data;
+  destinations = data;
 });
 
 const renderBeaches = (parent) => {
@@ -91,3 +93,5 @@ const queryProcessor = (parent, query) => {
     renderNoResults(parent);
   }
 };
+
+export { queryProcessor };

@@ -8,11 +8,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
-    <!-- In your HTML head: -->
-  <link rel="icon"
-    type="image/png"
-    href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300A99D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5L21 12 2.5 4.5 2 10l15 2-15 2z"/></svg>'
-  />
+    <link rel="icon"
+      type="image/png"
+      href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300A99D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5L21 12 2.5 4.5 2 10l15 2-15 2z"/></svg>'
+    />
+    <script defer>
+      async function fetchTravelData() {
+        try {
+            const response = await fetch('travel_recommendation_api.json');
+            if (!response.ok) {
+                throw new Error('Failed to fetch travel data');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching travel data:', error);
+            return null;
+        }
+      }
+
+      let destinations = null;
+
+      fetchTravelData().then(data => {
+        console.log(data);
+        destinations = data;
+      });
+
+      const renderBeaches = (parent) => {
+        const beachDestinations = destinations.beaches;
+
+        beachDestinations.forEach(dest => {
+          const card = document.createElement('div');
+          card.className = 'result-card';
+          card.innerHTML = `
+            <img src="images/${dest.imageUrl}" alt="${dest.name}" />
+            <h3>${dest.name}</h3>
+            <p>${dest.description}</p>
+            <a href="#" class="visit-btn">Visit</a>
+          `;
+          parent.appendChild(card);
+        });
+      }
+
+      const renderNoResults = (parent) => {
+        const noResultsMessage = document.createElement('p');
+        noResultsMessage.textContent = 'No results found.';
+        noResultsMessage.style.color = '#333';
+        parent.appendChild(noResultsMessage);
+      }
+
+      const renderTemples = (parent) => {
+        const templeDestinations = destinations.temples;
+
+        templeDestinations.forEach(dest => {
+          const card = document.createElement('div');
+          card.className = 'result-card';
+          card.innerHTML = `
+            <img src="images/${dest.imageUrl}" alt="${dest.name}" />
+            <h3>${dest.name}</h3>
+            <p>${dest.description}</p>
+            <a href="#" class="visit-btn">Visit</a>
+          `;
+          parent.appendChild(card);
+        });
+      }
+
+      const renderCountries = (parent) => {
+          const countryDestinations = destinations.countries;
+          countryDestinations.forEach(dest => {
+          const card = document.createElement('div');
+          const city = dest.cities[0];
+          card.className = 'result-card';
+          card.innerHTML = `
+            <img src="images/${city.imageUrl}" alt="${city.name}" />
+            <h3>${city.name}</h3>
+            <p>${city.description}</p>
+            <a href="#" class="visit-btn">Visit</a>
+          `;
+          parent.appendChild(card);
+        });
+      }
+
+      const queryProcessor = (parent, query) => {
+        // Check if query includes certain keywords
+        if (query.includes('beach')) {
+          // We can match 'beach', 'beaches', 'BEACH', etc.
+          console.log('Searching for beaches...');
+          renderBeaches(parent);
+        } else if (query.includes('temple')) {
+          // Matches 'temple', 'temples', 'TEMPLE'...
+          console.log('Searching for temples...');
+          renderTemples(parent);
+        } else if (query.includes('country') || query.includes('countries')) {
+          // Matches 'country', 'countries', 'COUNTRY', etc.
+          console.log('Searching for countries...');
+          renderCountries(parent);
+        } else {
+          // No recognized keyword
+          console.log('No results found.');
+          renderNoResults(parent);
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.querySelector('.search-bar input');
+        const searchButton = document.getElementById('search_btn');
+        const clearButton = document.getElementById('clear_btn');
+        const resultsContainer = document.getElementById('results');
+
+        searchButton.addEventListener('click', () => {
+          const query = searchInput.value.trim().toLowerCase();
+          console.log('Search button clicked', query);
+          resultsContainer.innerHTML = '';
+          queryProcessor(resultsContainer, query);
+        });
+
+        clearButton.addEventListener('click', () => {
+          console.log('Clear button clicked');
+          searchInput.value = '';
+          resultsContainer.innerHTML = '';
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -30,7 +147,7 @@
         <svg fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-2C18.88 4 12 4 12 4s-6.88 0-8.59.42a2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2C5.12 20 12 20 12 20s6.88 0 8.59-.42a2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
       </a>
     </div>
-  <!-- Navigation Bar -->
+
     <header class="navbar">
       <div class="navbar-logo">
         <span class="logo-icon"></span>
@@ -44,52 +161,23 @@
         </ul>
       </nav>
       <div class="search-bar">
-        <input
-          type="text"
-          placeholder="Enter a destination or keyword"
-          aria-label="Search Destination"
-        />
+        <input type="text" placeholder="Enter a destination or keyword" aria-label="Search Destination" />
         <button id="search_btn" type="submit">Search</button>
         <button id="clear_btn" type="button">Clear</button>
       </div>
     </header>
 
-  <!-- Hero Section -->
     <section class="hero">
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1>EXPLORE<br/>DREAM<br/>DESTINATION</h1>
         <p>
-          It encourages exploration of unfamiliar territories, embracing diverse
-          cultures and landscapes, while pursuing the desired destination that
-          captivates the heart and ignites a sense of wonder.
+          It encourages exploration of unfamiliar territories, embracing diverse cultures and landscapes, while pursuing the desired destination that captivates the heart and ignites a sense of wonder.
         </p>
         <a href="#" class="book-btn">Book Now</a>
       </div>
     </section>
 
     <div id="results" class="results-container"></div>
-
   </body>
-  <script src="travel_recommendation.js" />
-  <script>
-    const searchInput = document.querySelector('.search-bar input');
-    const searchButton = document.getElementById('search_btn');
-    const clearButton = document.getElementById('clear_btn');
-    const resultsContainer = document.getElementById('results');
-
-    // When the user clicks the button...
-    searchButton.addEventListener('click', () => {
-      console.log('Search button clicked');
-      const query = searchInput.value.trim().toLowerCase();
-      queryProcessor(resultsContainer, query);
-    });
-
-    // When the user clicks the clear button...
-    clearButton.addEventListener('click', () => {
-      console.log('Clear button clicked');
-      searchInput.value = '';
-      resultsContainer.innerHTML = ''; // Clear the results
-    });
-  </script>
 </html>
