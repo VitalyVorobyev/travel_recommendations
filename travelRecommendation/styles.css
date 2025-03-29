@@ -10,7 +10,7 @@ body {
   color: #333;
   background-color: #fff;
   margin: 0;
-  background: url("hero-bg.png") center center/cover no-repeat;
+  background: url("hero-bg.png") top center/cover no-repeat;
 }
 
 /* Social Links */
@@ -250,6 +250,55 @@ body {
   color: #ddd;
 }
 
+/* Contact us section */
+.contact-section {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+}
+
+.contact-section h1 {
+  color: #00A99D;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-form button {
+  padding: 0.8rem;
+  background-color: #00A99D;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #00877e;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 992px) {
   .navbar-menu ul {
@@ -260,6 +309,7 @@ body {
     font-size: 2.2rem;
   }
 }
+
 
 @media (max-width: 768px) {
   .navbar {
