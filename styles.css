@@ -124,11 +124,13 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh; /* Full screen height hero */
+  height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Left align content */
+  justify-content: flex-start;
   z-index: 1;
+  margin-top: -80px; /* Negative margin to pull hero up under navbar */
+  padding-top: 80px; /* Add padding to offset the negative margin */
 }
 
 /* Dark overlay to make text more readable */
@@ -309,25 +311,32 @@ body {
 
 /* Result cards */
 .results-container {
-  position: absolute;
-  top: 80px; /* Adjust this value based on your navbar height */
-  left: 0;
+  position: fixed;
+  top: 80px; /* Height of navbar */
   right: 0;
-  z-index: 10; /* Higher than hero section */
-  background-color: rgba(255, 255, 255, 0.95);
+  width: 50%; /* Take half of the viewport width */
+  max-width: 800px;
+  z-index: 15;
+  background-color: rgba(255, 255, 255, 0.0);
   padding: 20px;
-  margin: 0 auto;
-  max-width: 1200px; /* Optional: limits width on larger screens */
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 0 0 8px; /* Round only left corners */
+  box-shadow: -2px 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
 }
 
 .result-card {
+  flex: 0 0 calc(50% - 15px); /* Two cards per row with gap */
   background-color: white;
-  margin-bottom: 15px;
   padding: 15px;
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  min-width: 250px;
 }
 
 .result-card img {
